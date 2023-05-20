@@ -125,6 +125,8 @@ public class CucumberSteps extends CucumberConfiguration {
         verify(mockedRepository, times(1)).save(any(User.class));
     }
 
+    
+
     @Entonces("se muestra un campo de {}")
     public void fieldIsDisplayed(String fieldName) {
         String fieldId = getFieldIdFromName(fieldName);
@@ -198,8 +200,8 @@ public class CucumberSteps extends CucumberConfiguration {
             case "segundo apellido":
                 fieldId = "user-create-field-lastname2";
                 break;
-            case "description":
-                fieldId = "description";
+            case "descripción":
+                fieldId = "draw-field-description";
                 break;
             default:
                 break;
@@ -213,17 +215,14 @@ public class CucumberSteps extends CucumberConfiguration {
 
     @Dado("el correo {} está asignado a otro usuario")
     public void mockUserExists(String email) {
-        User existingUser = new User();
-        existingUser.setEmail(email);
-        when(mockedRepository.findByEmail(email)).thenReturn(existingUser);
-        doThrow(new RuntimeException("El correo electrónico ya está en uso")).when(mockedRepository)
-                .save(any(User.class));
-    }
+    User existingUser = new User();
+    existingUser.setEmail(email);
+    when(mockedRepository.findByEmail(email)).thenReturn(existingUser);
+    doThrow(new RuntimeException("El correo electrónico ya está en uso")).when(mockedRepository).save(any(User.class));
+}
 
-    @Dado("el primer apellido es nulo")
-    public void mockNullLastName() {
-        doThrow(new IllegalArgumentException("El primer apellido es obligatorio")).when(mockedRepository)
-                .save(any(User.class));
-    };
-
+   @Dado("el primer apellido es nulo")
+public void mockNullLastName() {
+    doThrow(new IllegalArgumentException("El primer apellido es obligatorio")).when(mockedRepository).save(any(User.class));
+}
 }

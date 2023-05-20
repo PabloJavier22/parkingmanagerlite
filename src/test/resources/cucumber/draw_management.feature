@@ -12,9 +12,11 @@ Característica: Gestion de sorteos
 
   Escenario: Comprobar que el formulario de creación de sorteo tiene todos los elementos
     Dado un usuario esta en la pagina creación de sorteo
-    
+
+
   Escenario: Crear un sorteo correctamente
     Dado un usuario esta en la pagina creación de sorteo
-    Y el usuario hace click sobre el botón enviar nuevo sorteo
+    Cuando relleno el campo descripción con ejemplo
+    Entonces el usuario hace click sobre el botón de crear sorteo
     Entonces esta en la pagina de lista de sorteos
     Y se ha persistido el sorteo en la base de datos
