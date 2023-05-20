@@ -31,7 +31,7 @@ Característica: Gestion de usuarios
     Y el correo usuario@correo.com está asignado a otro usuario
     Entonces esta en la pagina de creación de usuarios
 
-  Escenario: Crear un usuario incorrectamente
+  Escenario: Crear un usuario incorrectamente 2
     Dado un usuario esta en la pagina creación de usuarios
     Cuando relleno el campo primer apellido con  null
     Y el usuario hace click sobre el botón de crear usuario
