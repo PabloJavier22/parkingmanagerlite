@@ -13,7 +13,6 @@ Característica: Gestion de usuarios
     Y se muestra un campo de nombre
     Y se muestra un campo de primer apellido
     Y se muestra un campo de segundo apellido
-    Y se muestra un botón de creación
 
   Escenario: Crear un usuario correctamente
     Dado un usuario esta en la pagina creación de usuarios
@@ -24,3 +23,17 @@ Característica: Gestion de usuarios
     Y el usuario hace click sobre el botón de crear usuario
     Entonces esta en la pagina de lista de usuarios
     Y se ha persistido el usuario en la base de datos
+
+  Escenario: Crear un usuario incorrectamente
+    Dado un usuario esta en la pagina creación de usuarios
+    Cuando relleno el campo correo electrónico con usuario@correo.com
+    Y el usuario hace click sobre el botón de crear usuario
+    Y el correo usuario@correo.com está asignado a otro usuario
+    Entonces esta en la pagina de creación de usuarios
+
+  Escenario: Crear un usuario incorrectamente
+    Dado un usuario esta en la pagina creación de usuarios
+    Cuando relleno el campo primer apellido con  null
+    Y el usuario hace click sobre el botón de crear usuario
+    Y el primer apellido es nulo
+    Entonces esta en la pagina de creación de usuarios
