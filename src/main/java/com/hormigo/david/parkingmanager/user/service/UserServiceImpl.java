@@ -1,6 +1,8 @@
 package com.hormigo.david.parkingmanager.user.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.hormigo.david.parkingmanager.core.exceptions.UserDoesNotExistsException;
 import com.hormigo.david.parkingmanager.core.exceptions.UserExistsException;
+import com.hormigo.david.parkingmanager.user.domain.Role;
 import com.hormigo.david.parkingmanager.user.domain.User;
 import com.hormigo.david.parkingmanager.user.domain.UserDao;
 import com.hormigo.david.parkingmanager.user.domain.UserRepository;
@@ -55,9 +58,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(long id, UserDao userDao) throws UserDoesNotExistsException {
+    public User updateUser(long id, Map<String,Object> updates) throws UserDoesNotExistsException {
         User user = this.repository.findById(id).orElseThrow(UserDoesNotExistsException::new);
-        BeanUtils.copyProperties(userDao, user);
+        
+        for (Map.Entry<String, Object> entry : updates.entrySet()) {
+            String propertyName = entry.getKey();
+            Object propertyValue = entry.getValue();
+            if (propertyName == "role"){
+                if (propertyValue.equals("STUDENT")) {
+                    propertyValue = Role.STUDENT;
+                }
+                else{
+                    propertyValue = Role.PROFESSOR;
+                }
+            }
+
+            try {
+                Field field = user.getClass().getDeclaredField(propertyName);
+                field.setAccessible(true);
+                field.set(user, propertyValue);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+                // Handle exceptions accordingly
+            }
+        }
+        UserDao userDao = new UserDao();
+        BeanUtils.copyProperties(user,userDao);
+
         return this.repository.save(user);
     }
 

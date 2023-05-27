@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hormigo.david.parkingmanager.core.api.UserModelAssembler;
+import com.hormigo.david.parkingmanager.core.exceptions.EmailNotUpdatableException;
 import com.hormigo.david.parkingmanager.core.exceptions.UserDoesNotExistsException;
 import com.hormigo.david.parkingmanager.core.exceptions.UserExistsException;
 import com.hormigo.david.parkingmanager.user.domain.User;
@@ -96,8 +98,12 @@ public class UserRestController {
     }
 
     @PatchMapping("/api/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody UserDao userDao) throws UserDoesNotExistsException {
-        this.userService.updateUser(id,userDao);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody Map<String,Object> updates) throws UserDoesNotExistsException {
+        if (updates.containsKey("email")) {
+            throw new EmailNotUpdatableException();
+        }
+        User user = this.userService.updateUser(id,updates);
+        EntityModel<User> entityModel = this.userModelAssembler.toModel(user);
+        return ResponseEntity.ok().body(entityModel);
     }
 }

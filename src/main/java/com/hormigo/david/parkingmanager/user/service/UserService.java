@@ -1,6 +1,7 @@
 package com.hormigo.david.parkingmanager.user.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.hormigo.david.parkingmanager.core.exceptions.UserDoesNotExistsException;
@@ -14,5 +15,5 @@ public interface UserService {
     public boolean userExists(String email);
     public Optional<User> getUser(long id);
     public void deleteUserById(long id) throws UserDoesNotExistsException;
-    public User updateUser(long id,UserDao user) throws UserDoesNotExistsException;
+    public User updateUser(long id,Map<String, Object> updateData) throws UserDoesNotExistsException;
 }
