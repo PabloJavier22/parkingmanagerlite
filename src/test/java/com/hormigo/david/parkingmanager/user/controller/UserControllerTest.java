@@ -141,18 +141,18 @@ public class UserControllerTest {
     public void testModificarUsuarios() throws Exception{
         ObjectMapper mapper = new ObjectMapper();
         User user = new User("prueba@prueba.com","prueba","prueba",Role.STUDENT);
-        Map<String, Object> updateData = new HashMap<>();
+        Map<String, Object> updatedData = new HashMap<>();
         updatedData.put("name", "cambio");
         updatedData.put("lastName1", "cambio");
         updatedData.put("lastName2", "cambio");
         updatedData.put("role", "STUDENT");
         user.setName("cambio");
         String json = mapper.writeValueAsString(user);
-        String updatedDataJson = mapper.writeValueAsString(updateData);
-        when(userService.updateUser(2, updateData)).thenReturn(user);
+        String updatedDataJson = mapper.writeValueAsString(updatedData);
+        when(userService.updateUser(2, updatedData)).thenReturn(user);
         String json2 = mapper.writeValueAsString(user);
-        String updateDataJson2 = mapper.writeValueAsString(updateData);
-        when(userService.updateUser(2, updateData)).thenReturn(user);
+        String updateDataJson2 = mapper.writeValueAsString(updatedData);
+        when(userService.updateUser(2, updatedData)).thenReturn(user);
         this.mockMvc.perform(patch("/api/users/2").contentType(MediaType.APPLICATION_JSON).content(updateDataJson))
                     .andDo(print())
                     .andExpect(status().isOk())
