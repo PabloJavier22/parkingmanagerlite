@@ -94,7 +94,7 @@ public class UserControllerTest {
         User user = new User("prueba@prueba.com","prueba","prueba",Role.STUDENT);
         String json = mapper.writeValueAsString(user);
         when(userService.register(any(UserDao.class))).thenThrow(UserExistsException.class);
-        this.mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
+        this.mockMvc.perform(post("/api/users").contentType("application/json"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().json("Ya existe alguien registrado con este correo"));
@@ -108,7 +108,7 @@ public class UserControllerTest {
         User user = new User("","prueba","prueba",Role.STUDENT);
         String json = mapper.writeValueAsString(user);
         when(userService.register(any(UserDao.class))).thenReturn(null);
-        this.mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
+        this.mockMvc.perform(post("/api/users").contentType("application/json"))
                     .andDo(print())
                     .andExpect(status().is(422))
                     .andExpect(content().string("falta correo"));
@@ -121,7 +121,7 @@ public class UserControllerTest {
         User user = new User("prueba@prueba.com",null,"prueba",Role.STUDENT);
         String json = mapper.writeValueAsString(user);
         when(userService.register(any(UserDao.class))).thenReturn(null);
-        this.mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
+        this.mockMvc.perform(post("/api/users").contentType("application/json"))
                     .andDo(print())
                     .andExpect(status().is(422))
                     .andExpect(content().string("falta nombre"));
@@ -136,27 +136,26 @@ public class UserControllerTest {
                     .andExpect(status().is(204));
     }
 
-    @Test 
-    //no me funciona...
-    public void testModificarUsuarios() throws Exception{
+    @Test
+    public void testModificarUsuarios() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         User user = new User("prueba@prueba.com","prueba","prueba",Role.STUDENT);
         Map<String, Object> updatedData = new HashMap<>();
         updatedData.put("name", "cambio");
         updatedData.put("lastName1", "cambio");
-        updatedData.put("lastName2", "cambio");
+        updatedData.put("lastName2", null);
         updatedData.put("role", "STUDENT");
         user.setName("cambio");
-        String json = mapper.writeValueAsString(user);
-        String updatedDataJson = mapper.writeValueAsString(updatedData);
+        String json = mapper.writeValueAsString(updatedData);
+    
         when(userService.updateUser(2, updatedData)).thenReturn(user);
-        String json2 = mapper.writeValueAsString(user);
-        String updateDataJson2 = mapper.writeValueAsString(updatedData);
-        when(userService.updateUser(2, updatedData)).thenReturn(user);
-        this.mockMvc.perform(patch("/api/users/2").contentType(MediaType.APPLICATION_JSON).content(updateDataJson))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(content().json(json));
-
+    
+        this.mockMvc.perform(patch("/api/users/2")
+                .contentType("application/json")
+                .content(json))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(json));
     }
-}
+    
+    }
